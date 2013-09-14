@@ -1,0 +1,9 @@
+{
+  "name": "perc",
+  "version": "${FBSTRING_PLUGIN_VERSION}",
+  "description": "Intel Perceptual Computing Plugin",
+
+	"plugins": [
+    { "path": "npperc.dll", "public": true }
+  ]
+}
