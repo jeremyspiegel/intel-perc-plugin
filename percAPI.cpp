@@ -1,39 +1,58 @@
-/**********************************************************\
-
-  Auto-generated percAPI.cpp
-
-\**********************************************************/
-
 #include "JSObject.h"
 #include "variant_list.h"
 #include "DOM/Document.h"
 #include "global/config.h"
-
 #include "percAPI.h"
+#include "util_pipeline.h"
+#include "gesture_render.h"
+#include <process.h>
+#include <windows.h>
 
-///////////////////////////////////////////////////////////////////////////////
-/// @fn FB::variant percAPI::echo(const FB::variant& msg)
-///
-/// @brief  Echos whatever is passed from Javascript.
-///         Go ahead and change it. See what happens!
-///////////////////////////////////////////////////////////////////////////////
-FB::variant percAPI::echo(const FB::variant& msg)
+class MyPipeline: public UtilPipeline
 {
-    static int n(0);
-    fire_echo("So far, you clicked this many times: ", n++);
+public:
+    MyPipeline( percAPI& percAPI )
+        : UtilPipeline()
+        , m_render( L"Gesture Viewer" )
+        , m_percAPI( percAPI )
+    {
+		EnableGesture();
+	}
 
-    // return "foobar";
-    return msg;
+    virtual bool OnNewFrame()
+    {
+        MyOnNewFrame();
+        return m_render.RenderFrame(QueryImage(PXCImage::IMAGE_TYPE_DEPTH), QueryGesture(), &m_gdata);
+    }
+
+protected:
+    void MyOnNewFrame();
+
+    GestureRender       m_render;
+    PXCGesture::Gesture m_gdata;
+    percAPI&            m_percAPI;
+};
+
+void MyPipeline::MyOnNewFrame()
+{
+    //PXCGesture* detector = QueryGesture();
+    //m_percAPI.fire_frame(5);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// @fn percPtr percAPI::getPlugin()
-///
-/// @brief  Gets a reference to the plugin that was passed in when the object
-///         was created.  If the plugin has already been released then this
-///         will throw a FB::script_error that will be translated into a
-///         javascript exception in the page.
-///////////////////////////////////////////////////////////////////////////////
+void LoopFrames( void* arg )
+{
+    MyPipeline pipeline( *static_cast<percAPI*>( arg ) );
+    if (!pipeline.LoopFrames()) MessageBox(NULL, L"Failed to initialize or stream data", L"", 0);
+}
+
+percAPI::percAPI(const percPtr& plugin, const FB::BrowserHostPtr& host) :
+    m_plugin(plugin), m_host(host)
+{
+    _beginthread( &LoopFrames, 0, this );
+	MessageBox(NULL, L"percAPI::percAPI", L"", 0);
+    //registerMethod("frame", make_method(this, &percAPI::frame));
+}
+
 percPtr percAPI::getPlugin()
 {
     percPtr plugin(m_plugin.lock());
@@ -41,26 +60,4 @@ percPtr percAPI::getPlugin()
         throw FB::script_error("The plugin is invalid");
     }
     return plugin;
-}
-
-// Read/Write property testString
-std::string percAPI::get_testString()
-{
-    return m_testString;
-}
-
-void percAPI::set_testString(const std::string& val)
-{
-    m_testString = val;
-}
-
-// Read-only property version
-std::string percAPI::get_version()
-{
-    return FBSTRING_PLUGIN_VERSION;
-}
-
-void percAPI::testEvent()
-{
-    fire_test();
 }

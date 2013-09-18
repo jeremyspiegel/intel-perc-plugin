@@ -10,6 +10,7 @@
 #include "percAPI.h"
 
 #include "perc.h"
+#include <windows.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 /// @fn perc::StaticInitialize()
@@ -22,6 +23,8 @@ void perc::StaticInitialize()
 {
     // Place one-time initialization stuff here; As of FireBreath 1.4 this should only
     // be called once per process
+
+	MessageBox(NULL, L"StaticInitialize", L"", 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
