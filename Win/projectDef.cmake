@@ -1,4 +1,4 @@
-#/**********************************************************\ 
+#/**********************************************************\
 # Auto-generated Windows project definition file for the
 # perc project
 #\**********************************************************/
@@ -48,6 +48,11 @@ add_windows_plugin(${PROJECT_NAME} SOURCES)
 # add library dependencies here; leave ${PLUGIN_INTERNAL_DEPS} there unless you know what you're doing!
 target_link_libraries(${PROJECT_NAME}
     ${PLUGIN_INTERNAL_DEPS}
+    optimized ${CMAKE_CURRENT_SOURCE_DIR}/PCSDK/lib/libpxc
+    debug ${CMAKE_CURRENT_SOURCE_DIR}/PCSDK/lib/libpxc_d
+    optimized ${CMAKE_CURRENT_SOURCE_DIR}/PCSDK/lib/libpxcutils
+    debug ${CMAKE_CURRENT_SOURCE_DIR}/PCSDK/lib/libpxcutils_d
+    msimg32
     )
 
 set(WIX_HEAT_FLAGS
