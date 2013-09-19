@@ -95,8 +95,8 @@ public:
         template <class T> pxcStatus __inline CreateStream(pxcU32 sidx, T **stream) { return CreateStream(sidx,T::CUID,(void**)stream); }
 
         /* Device Properties */
-        virtual pxcStatus PXCAPI QueryPropertyInfo(Property label, PXCRangeF32 *range, pxcF32 *step, pxcF32 *def, pxcBool *isAuto) { return PXC_STATUS_FEATURE_UNSUPPORTED; }
-        virtual pxcStatus PXCAPI QueryProperty(Property label, pxcF32 *value) { return PXC_STATUS_FEATURE_UNSUPPORTED; }
+        virtual pxcStatus PXCAPI QueryPropertyInfo(Property /*label*/, PXCRangeF32 * /*range*/, pxcF32 * /*step*/, pxcF32 * /*def*/, pxcBool * /*isAuto*/) { return PXC_STATUS_FEATURE_UNSUPPORTED; }
+        virtual pxcStatus PXCAPI QueryProperty(Property /*label*/, pxcF32 * /*value*/) { return PXC_STATUS_FEATURE_UNSUPPORTED; }
         pxcStatus __inline QueryPropertyAsUID(Property label, pxcUID *uid) { return QueryProperty(label,(pxcF32*)uid); }
         pxcStatus __inline QueryPropertyAsPoint(Property label, PXCPointF32 *point) {
             QueryProperty(label,&point->x);
@@ -111,13 +111,9 @@ public:
             QueryProperty(label,&range->min);
             return QueryProperty((Property)(label+1),&range->max);
         }
-        pxcStatus __inline QueryPropertyAsSize(Property label, PXCSizeF32 *size) {
-            QueryProperty(label,&size->width);
-            return QueryProperty((Property)(label+1),&size->height);
-        }
 
-        virtual pxcStatus PXCAPI SetPropertyAuto(Property pty, pxcBool ifauto) { return PXC_STATUS_FEATURE_UNSUPPORTED; }
-        virtual pxcStatus PXCAPI SetProperty(Property pty, pxcF32 value) { return PXC_STATUS_FEATURE_UNSUPPORTED; }
+        virtual pxcStatus PXCAPI SetPropertyAuto(Property /*pty*/, pxcBool /*ifauto*/) { return PXC_STATUS_FEATURE_UNSUPPORTED; }
+        virtual pxcStatus PXCAPI SetProperty(Property /*pty*/, pxcF32 /*value*/) { return PXC_STATUS_FEATURE_UNSUPPORTED; }
     };
 
     class VideoStream : public PXCBase {

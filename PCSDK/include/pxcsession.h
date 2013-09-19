@@ -56,6 +56,7 @@ public:
         /* object recognition building blocks */
         IMPL_SUBGROUP_FACE_ANALYSIS         =    0x00000001,
         IMPL_SUBGROUP_GESTURE_RECOGNITION   =    0x00000010,
+		IMPL_SUBGROUP_SEGMENTATION			=    0x00000020,
 
         /* sensor building blocks */
         IMPL_SUBGROUP_AUDIO_CAPTURE         =    0x00000001,

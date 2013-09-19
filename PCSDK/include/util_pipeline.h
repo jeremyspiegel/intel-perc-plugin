@@ -12,10 +12,12 @@ Copyright(c) 2012 Intel Corporation. All Rights Reserved.
 #include "util_pipeline_gesture.h"
 #include "util_pipeline_raw.h"
 #include "util_pipeline_voice.h"
+#include "util_pipeline_segmentation.h"
 
-class UtilPipeline:public UtilPipelineVoice, public UtilPipelineGesture, public UtilPipelineFace, public UtilPipelineRaw {
+class UtilPipeline:public UtilPipelineSegmentation, public UtilPipelineVoice, public UtilPipelineGesture, public UtilPipelineFace, public UtilPipelineRaw {
 public:
-	UtilPipeline(PXCSession *session=NULL, const pxcCHAR *file=0, bool recording=false):UtilPipelineVoice(),UtilPipelineGesture(),UtilPipelineFace(),UtilPipelineRaw(session,file,recording,4) {
+	UtilPipeline(PXCSession *session=NULL, const pxcCHAR *file=0, bool recording=false):UtilPipelineSegmentation(),UtilPipelineVoice(),UtilPipelineGesture(),UtilPipelineFace(),UtilPipelineRaw(session,file,recording,5) {
+		UtilPipelineVoice::m_next=dynamic_cast<UtilPipelineSegmentation*>(this);
 		UtilPipelineGesture::m_next=dynamic_cast<UtilPipelineVoice*>(this);
 		UtilPipelineFace::m_next=dynamic_cast<UtilPipelineGesture*>(this);
 		UtilPipelineRaw::m_next=dynamic_cast<UtilPipelineFace*>(this);

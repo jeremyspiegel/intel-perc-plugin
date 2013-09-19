@@ -24,7 +24,8 @@ public:
 	virtual void Release(void) { delete this; }
 
     virtual void SetFilter(PXCSession::ImplDesc &desc)                  { m_desc_filter=desc; }
-    virtual void SetFilter(PXCImage::ImageType type, PXCSizeU32 &size)  { m_size_filters[type].push_back(size); }
+	virtual void SetFilter(PXCImage::ImageType type, PXCSizeU32 &size, pxcU32 fps=0);
+	virtual void SetFilter(PXCCapture::VideoStream::ProfileInfo *pinfo)	{ m_vstream_filters.push_back(*pinfo); }
 	virtual void SetFilter(const pxcCHAR *device)						{ m_name_filter=device; }
 	virtual void SetFilter(PXCCapture::Device::Property p, pxcF32 v)	{ m_devcap_filters[p]=v; }
 
@@ -51,7 +52,7 @@ protected:
     PXCSession*                 m_session;
     PXCSessionService*          m_session_service;
     PXCSmartPtr<PXCScheduler>   m_scheduler;
-    std::map<PXCImage::ImageType, std::list<PXCSizeU32> >   m_size_filters;
+    std::list<PXCCapture::VideoStream::ProfileInfo>			m_vstream_filters;
     std::map<PXCCapture::Device::Property,pxcF32>           m_devcap_filters;
     PXCSession::ImplDesc        m_desc_filter;
     const pxcCHAR*              m_name_filter;
@@ -67,7 +68,7 @@ protected:
 	virtual pxcStatus PXCAPI PassOnStatus(pxcStatus sts) { return sts; }
 
     virtual int  MatchProfiles(std::vector<PXCCapture::VideoStream::DataDesc*> &vinputs, PXCCapture::Device::StreamInfo &sinfo, std::list<PXCCapture::VideoStream::ProfileInfo> &profiles, int vstream);
-    virtual void ScanProfiles(std::list<PXCCapture::VideoStream::ProfileInfo> &profiles, PXCImage::ImageType stype, PXCCapture::VideoStream *vstream);
+    virtual void ScanProfiles(std::list<PXCCapture::VideoStream::ProfileInfo> &profiles, PXCCapture::VideoStream *vstream);
     virtual bool RecordProperties(std::vector<PXCCapture::VideoStream::DataDesc*> &vinputs);
     virtual void FindBestProfile(std::vector<PXCCapture::VideoStream::DataDesc*> &vinputs, std::list<PXCCapture::VideoStream::ProfileInfo> &profiles, int vstream);
 	virtual bool ConsolidateAudioRequests(std::vector<PXCCapture::AudioStream::DataDesc*> &ainputs,PXCCapture::AudioStream::DataDesc *ainput);

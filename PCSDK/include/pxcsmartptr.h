@@ -92,7 +92,7 @@ public:
 
     PXCSmartArray(int size=PXCCapture::VideoStream::STREAM_LIMIT) {
         this->size=size;
-        objects=new T*[size];
+        objects=new T*[(unsigned)size];
         if (objects) for (int i=0;i<size;i++) objects[i]=0;
         objects2=0;
     }
@@ -159,7 +159,7 @@ public:
         if (!objects) return PXC_STATUS_HANDLE_INVALID;
         for (int i=0;i<(int)size;i++) {
             if (!objects[i]) continue;
-            return objects[i]->SynchronizeEx(size,objects,idx,timeout);
+            return objects[i]->SynchronizeEx((pxcU32)size,objects,idx,timeout);
         }
         return PXC_STATUS_HANDLE_INVALID;
     }

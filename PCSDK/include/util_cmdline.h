@@ -4,7 +4,7 @@ INTEL CORPORATION PROPRIETARY INFORMATION
 This software is supplied under the terms of a license agreement or nondisclosure
 agreement with Intel Corporation and may not be copied or disclosed except in
 accordance with the terms of that agreement
-Copyright(c) 2012 Intel Corporation. All Rights Reserved.
+Copyright(c) 2012-2013 Intel Corporation. All Rights Reserved.
 
 *******************************************************************************/
 #pragma once
@@ -18,8 +18,8 @@ public:
     UtilCmdLine(PXCSession *session, pxcUID iuid=0);
     bool Parse(const pxcCHAR *options, int argc, pxcCHAR *argv[]);
 
-    std::list<PXCSizeU32>   m_csize;
-    std::list<PXCSizeU32>   m_dsize;
+    std::list<std::pair<PXCSizeU32,pxcU32> >   m_csize;
+    std::list<std::pair<PXCSizeU32,pxcU32> >   m_dsize;
     pxcUID      m_iuid;
     pxcU32      m_nframes;
     pxcCHAR     *m_sdname;
@@ -30,9 +30,13 @@ public:
     pxcCHAR     *m_recordedFile;
     pxcBool     m_realtime;
     pxcCHAR     *m_ttstext;
+    pxcEnum     m_language;
     bool        m_bRecord;
     pxcCHAR     *m_traceFile;
     pxcU32      m_eos;
+	bool		m_bFace;
+	bool		m_bGesture;
+	bool		m_bVoice;
 
 protected:
     PXCSession      *m_session;

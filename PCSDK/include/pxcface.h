@@ -61,7 +61,7 @@ public:
             PXCSizeU32  maxFaceSize;    /* maximum face size */
             pxcU64      reserved;
             ViewAngle   viewAngles;     /* algorithm limitation on face view angles */
-            pxcU32      reserved2;
+            pxcU32      responsiveness; 
         };
 
         struct Data {
@@ -122,12 +122,12 @@ public:
         virtual pxcStatus PXCAPI QueryLandmarkData(pxcUID fid, Label landmark, pxcU32 lidx, LandmarkData *data)=0;
         pxcStatus __inline QueryLandmarkData(pxcUID fid, Label landmark, LandmarkData *data) {
             pxcStatus sts=PXC_STATUS_ITEM_UNAVAILABLE;
-            for (int i=0;i<((landmark&LABEL_SIZE_MASK)?(landmark&LABEL_SIZE_MASK):1);i++)
+            for (pxcU32 i=0;i<(pxcU32)((landmark&LABEL_SIZE_MASK)?(landmark&LABEL_SIZE_MASK):1);i++)
                 if (QueryLandmarkData(fid,landmark,i,data+i)>=PXC_STATUS_NO_ERROR) sts=PXC_STATUS_NO_ERROR; else data[i].label=0;
             return sts;
         }
 
-        virtual pxcStatus PXCAPI QueryPoseData(pxcUID fid, PoseData *pose) { return PXC_STATUS_FEATURE_UNSUPPORTED; }
+        virtual pxcStatus PXCAPI QueryPoseData(pxcUID /*fid*/, PoseData * /*pose*/)=0;
     };
 
     class Recognition:public PXCBase {        /* extend Recognition::Database */
@@ -156,46 +156,6 @@ public:
         virtual pxcStatus PXCAPI DeserializeModel(pxcBYTE *buffer, Model **model)=0;
     };
 
-    class Attribute:public PXCBase {    /* manage all attributes */
-    public:
-        PXC_CUID_OVERWRITE(PXC_UID('F','A','T','T'));
-
-        enum Label {
-            LABEL_AGE_GROUP    =1,
-            LABEL_GENDER       =2,
-            LABEL_EMOTION      =3,
-            LABEL_EYE_CLOSED   =4,
-        };
-
-        struct ProfileInfo {
-            pxcU32      threshold;  /* default threshold for score, 0-100 */
-            pxcBool     smoothing;  /* score smoothing: 0=disabled, 1=enabled */
-            pxcU32      reserved[2];
-        };
-
-        enum Index {
-            /* age group index access */
-            INDEX_AGE_GROUP_BABY=0,       /* 0-2   */
-            INDEX_AGE_GROUP_TODDLER=1,    /* 2-3   */
-            INDEX_AGE_GROUP_YOUTH=2,      /* 3-15  */
-            INDEX_AGE_GROUP_ADULT=3,      /* 16-60 */
-            INDEX_AGE_GROUP_SENIOR=4,     /* 60+   */
-            /* Gender index access */
-            INDEX_GENDER_MALE=0,
-            INDEX_GENDER_FEMALE=1,
-            /* Eye’s closed index access */
-            INDEX_EYE_CLOSED_LEFT=0,
-            INDEX_EYE_CLOSED_RIGHT=1,
-            /* emotion index access */
-            INDEX_EMOTION_SMILE=0,
-        };
-
-        virtual pxcStatus PXCAPI QueryProfile(Label label, pxcU32 pidx, ProfileInfo *profile)=0;
-        pxcStatus __inline QueryProfile(Label label, ProfileInfo *profile) { return QueryProfile(label, (pxcU32)WORKING_PROFILE,profile); }
-        virtual pxcStatus PXCAPI SetProfile(Label label, ProfileInfo *profile)=0;
-        virtual pxcStatus PXCAPI QueryData(Label label, pxcUID fid, pxcU32 *scores)=0;
-    };
-
     virtual pxcStatus PXCAPI QueryProfile(pxcU32 pidx, ProfileInfo *profile)=0;
     pxcStatus __inline QueryProfile(ProfileInfo *profile) { return QueryProfile((pxcU32)WORKING_PROFILE,profile); }
     virtual pxcStatus PXCAPI SetProfile(ProfileInfo *profile)=0;
@@ -204,5 +164,3 @@ public:
     pxcStatus __inline QueryFace(pxcU32 fidx, pxcUID *fid) { return QueryFace(fidx,fid,0); }
     virtual pxcStatus PXCAPI ProcessImageAsync(PXCImage *images[], PXCScheduler::SyncPoint **sp)=0;
 };
-
- 

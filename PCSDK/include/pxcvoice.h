@@ -14,6 +14,8 @@ Copyright(c) 2013 Intel Corporation. All Rights Reserved.
 #pragma once
 #include "pxcsession.h"
 #include "pxccapture.h"
+#pragma warning(push)
+#pragma warning(disable:4201) /* nameless structs/unions */
 
 /**
    This class defines a standard interface for performing voice recognition.
@@ -66,7 +68,15 @@ public:
 
     struct ProfileInfo {
         enum Language {
-            LANGUAGE_US_ENGLISH  = PXC_UID('e','n','U','S'),
+            LANGUAGE_US_ENGLISH     = PXC_UID('e','n','U','S'),
+            LANGUAGE_GB_ENGLISH     = PXC_UID('e','n','G','B'),
+            LANGUAGE_DE_GERMAN      = PXC_UID('d','e','D','E'),
+            LANGUAGE_US_SPANISH     = PXC_UID('e','s','U','S'),
+            LANGUAGE_FR_FRENCH      = PXC_UID('f','r','F','R'),
+            LANGUAGE_IT_ITALIAN     = PXC_UID('i','t','I','T'),
+            LANGUAGE_JP_JAPANESE    = PXC_UID('j','a','J','P'),
+            LANGUAGE_CN_CHINESE     = PXC_UID('z','h','C','N'),
+            LANGUAGE_BR_PORTUGUESE  = PXC_UID('p','t','B','R'),
         };
 
         PXCCapture::AudioStream::DataDesc inputs;
@@ -78,7 +88,7 @@ public:
     };
 
     virtual pxcStatus PXCAPI QueryProfile(pxcU32 pidx, ProfileInfo *pinfo)=0;
-    pxcStatus __inline QueryProfile(ProfileInfo *pinfo) { return QueryProfile(WORKING_PROFILE,pinfo); }
+    pxcStatus __inline QueryProfile(ProfileInfo *pinfo) { return QueryProfile((pxcU32)WORKING_PROFILE,pinfo); }
     virtual pxcStatus PXCAPI SetProfile(ProfileInfo *pinfo)=0;
 
     virtual pxcStatus PXCAPI CreateGrammar(pxcUID *gid)=0; 
@@ -88,7 +98,10 @@ public:
     pxcStatus __inline SetDictation() { return SetGrammar(0); }
 
     virtual pxcStatus PXCAPI ProcessAudioAsync(PXCAudio *audio, PXCScheduler::SyncPoint **sp)=0;
+	pxcStatus __inline ProcessAudioEOS(void) { return ProcessAudioAsync(0,0); }
+
     virtual pxcStatus PXCAPI SubscribeRecognition(pxcU32 threshold, Recognition::Handler *handler)=0;
+    pxcStatus __inline SubscribeRecognition(Recognition::Handler *handler) { return SubscribeRecognition((pxcU32)-1, handler); }
     virtual pxcStatus PXCAPI SubscribeAlert(Alert::Handler *handler)=0;
 };
 
@@ -102,7 +115,15 @@ public:
 
     struct ProfileInfo {
         enum Language {
-            LANGUAGE_US_ENGLISH  = PXC_UID('e','n','U','S'),
+            LANGUAGE_US_ENGLISH     = PXC_UID('e','n','U','S'),
+            LANGUAGE_GB_ENGLISH     = PXC_UID('e','n','G','B'),
+            LANGUAGE_DE_GERMAN      = PXC_UID('d','e','D','E'),
+            LANGUAGE_US_SPANISH     = PXC_UID('e','s','U','S'),
+            LANGUAGE_FR_FRENCH      = PXC_UID('f','r','F','R'),
+            LANGUAGE_IT_ITALIAN     = PXC_UID('i','t','I','T'),
+            LANGUAGE_JP_JAPANESE    = PXC_UID('j','a','J','P'),
+            LANGUAGE_CN_CHINESE     = PXC_UID('z','h','C','N'),
+            LANGUAGE_BR_PORTUGUESE  = PXC_UID('p','t','B','R'),
         };
 
         enum Voice {
@@ -118,7 +139,7 @@ public:
     };
 
     virtual pxcStatus PXCAPI QueryProfile(pxcU32 pidx, ProfileInfo *pinfo)=0;
-    pxcStatus __inline QueryProfile(ProfileInfo *pinfo) { return QueryProfile(WORKING_PROFILE,pinfo); }
+    pxcStatus __inline QueryProfile(ProfileInfo *pinfo) { return QueryProfile((pxcU32)WORKING_PROFILE,pinfo); }
     virtual pxcStatus PXCAPI SetProfile(ProfileInfo *pinfo)=0;
 
     virtual pxcStatus PXCAPI QueueSentence(pxcCHAR *sentence, pxcU32 nchars, pxcUID *id)=0;
@@ -126,3 +147,4 @@ public:
 
     virtual pxcStatus PXCAPI ProcessAudioAsync(pxcUID id, PXCAudio **audio, PXCScheduler::SyncPoint **sp)=0; // return PXC_STATUS_ITEM_UNAVAILABLE for end of sentense
 };
+#pragma warning(pop)

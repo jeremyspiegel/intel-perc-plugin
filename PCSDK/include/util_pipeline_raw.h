@@ -23,8 +23,8 @@ public:
 	virtual void  OnReconnect(void) {}
 	virtual bool  OnDisconnect(void);
 	virtual bool  OnNewFrame(void) { return true; }
-	virtual void  OnImage(PXCImage *image) {}
-	virtual void  OnAudio(PXCAudio *audio) {}
+	virtual void  OnImage(PXCImage * /*image*/) {}
+	virtual void  OnAudio(PXCAudio * /*audio*/) {}
 
 	virtual PXCSession*		QuerySession(void)	{ return m_session; }
 	virtual UtilCapture*	QueryCapture(void)	{ return m_capture; }

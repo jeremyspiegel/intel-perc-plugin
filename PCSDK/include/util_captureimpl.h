@@ -4,7 +4,7 @@ INTEL CORPORATION PROPRIETARY INFORMATION
 This software is supplied under the terms of a license agreement or nondisclosure
 agreement with Intel Corporation and may not be copied or disclosed except in
 accordance with the terms of that agreement
-Copyright(c) 2012 Intel Corporation. All Rights Reserved.
+Copyright(c) 2012, 2013 Intel Corporation. All Rights Reserved.
 
 *******************************************************************************/
 #pragma once
@@ -15,6 +15,10 @@ Copyright(c) 2012 Intel Corporation. All Rights Reserved.
 #include "service/pxcschedulerservice.h"
 #include "pxccapture.h"
 #include "pxcsmartptr.h"
+
+#pragma warning(push)
+#pragma warning(disable:4324) // align padding
+#pragma warning(disable:4100) // unreferenced formal parameter
 
 class UtilCaptureImpl: public PXCBaseImpl<PXCCapture> {
 public:
@@ -74,6 +78,13 @@ public:
 
         virtual void                AddRef(void) {  InterlockedIncrement((volatile long*)&deviceRef); }
         virtual void      PXCAPI    Release(void);
+
+        // ReadBufferedStream copies the specified buffered stream (sidx) 
+        // sample to a caller-allocated image (outImage). The outImage 
+        // argument can be NULL if a copy is not desired.
+        // The optional flag (outPreviouslyConsumed) is set if the newest
+        // sample was copied in a prior read call or cleared otherwise. 
+        virtual pxcStatus PXCAPI ReadBufferedStream( pxcU32 sidx, PXCImage* outImage, pxcBool* outPreviouslyConsumed ) { return PXC_STATUS_FEATURE_UNSUPPORTED; }
 
     protected:
 
@@ -136,3 +147,4 @@ protected:
     __declspec(align(32)) volatile pxcU32   captureRef;
 };
 
+#pragma warning(pop)

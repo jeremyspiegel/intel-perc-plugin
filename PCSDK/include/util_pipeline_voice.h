@@ -25,9 +25,9 @@ public:
 	virtual bool  SetVoiceCommands(std::vector<std::wstring> &cmds);
     virtual bool  SetVoiceDictation(void);
 
-	virtual void  OnVoiceRecognitionSetup(PXCVoiceRecognition::ProfileInfo *finfo) {}
-	virtual void  PXCAPI OnRecognized(PXCVoiceRecognition::Recognition *data) {}
-	virtual void  PXCAPI OnAlert(PXCVoiceRecognition::Alert *data) {}
+	virtual void  OnVoiceRecognitionSetup(PXCVoiceRecognition::ProfileInfo * /*finfo*/) {}
+	virtual void  PXCAPI OnRecognized(PXCVoiceRecognition::Recognition * /*data*/) {}
+	virtual void  PXCAPI OnAlert(PXCVoiceRecognition::Alert * /*data*/) {}
 
 	virtual PXCVoiceRecognition* QueryVoiceRecognition(void) { return m_vrec; }
 
@@ -40,7 +40,6 @@ protected:
     std::vector<std::wstring>           m_cmds;
     pxcUID                              m_grammar;
     bool                                m_pause;
-    bool                                m_setgrammar;
 
 	virtual bool      StackableCreate(PXCSession *session);
 	virtual pxcStatus StackableSearchProfiles(UtilCapture *uc, std::vector<PXCCapture::VideoStream::DataDesc*> &vinputs, int vidx, std::vector<PXCCapture::AudioStream::DataDesc*> &ainputs, int aidx);

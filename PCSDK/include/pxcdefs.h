@@ -66,11 +66,6 @@ struct PXCSizeU32 {
     pxcU32 width, height;
 };
 
-/** A type representing an two dimensional extent defined with pxcF32 values */
-struct PXCSizeF32 {
-    pxcF32 width, height;
-};
-
 /** A type representing a ratio of pxcF32 values */
 struct PXCRatioF32 {
     pxcF32 denominator;
@@ -111,6 +106,16 @@ struct PXCRangeF32 {
 /** A type representing a three-dimensional point defined with pxcF32 values */
 struct PXCPoint3DF32 {
     pxcF32 x, y, z;
+};
+
+/** A type representing a four-dimensional point or vector, for instance quaternion */
+struct PXCPoint4DF32 {
+    pxcF32 x, y, z, w;
+};
+
+/** A type representing indices of a triangle */
+struct PXCPoint3DU32 {
+    pxcU32 i, j, k;
 };
 
 /** This macro constructs a pxcUID given four byte values.  The arguments will

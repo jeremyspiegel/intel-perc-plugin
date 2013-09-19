@@ -12,6 +12,8 @@ Copyright(c) 2011-2013 Intel Corporation. All Rights Reserved.
  */
 #pragma once
 #include "pxcbase.h"
+#pragma warning(push)
+#pragma warning(disable:4201) /* nameless structs/unions */
 
 class PXCAccelerator;
 /**
@@ -105,3 +107,4 @@ public:
     pxcStatus __inline TryAccess(Access access, ImageData *data) { return TryAccess(access, 0, (ColorFormat)0, data); }
     virtual pxcStatus   PXCAPI  ReleaseAccess(ImageData *data)=0;
 };
+#pragma warning(pop)

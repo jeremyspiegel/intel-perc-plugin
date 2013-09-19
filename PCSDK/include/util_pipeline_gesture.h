@@ -20,9 +20,9 @@ public:
 	virtual void  EnableGesture(pxcCHAR *name);
     virtual void  PauseGesture(bool pause) { m_pause=pause; }
 
-	virtual void  OnGestureSetup(PXCGesture::ProfileInfo *pinfo) {}
-	virtual void  PXCAPI OnGesture(PXCGesture::Gesture *data) {}
-	virtual void  PXCAPI OnAlert(PXCGesture::Alert *data) {}
+	virtual void  OnGestureSetup(PXCGesture::ProfileInfo * /*pinfo*/) {}
+	virtual void  PXCAPI OnGesture(PXCGesture::Gesture * /*data*/) {}
+	virtual void  PXCAPI OnAlert(PXCGesture::Alert * /*data*/) {}
 
 	virtual PXCGesture*	QueryGesture(void)	{ return m_gesture; }
 

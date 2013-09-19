@@ -50,7 +50,7 @@ private:
 class PXCCallbackBase {
 public:
     enum { CUID=0 };
-    virtual void* PXCAPI DynamicCast(pxcUID cuid) { return 0; }
+    virtual void* PXCAPI DynamicCast(pxcUID /* cuid */) { return 0; }
     virtual void  PXCAPI Release(void) { delete this; }
 };
 

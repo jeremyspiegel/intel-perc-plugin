@@ -14,6 +14,8 @@ Copyright(c) 2011-2013 Intel Corporation. All Rights Reserved.
 #pragma once
 #include "pxcsession.h"
 #include "pxccapture.h"
+#pragma warning(push)
+#pragma warning(disable:4201) /* nameless structs/unions */
 
 /**
     This class defines a standard interface for gesture recognition
@@ -210,7 +212,7 @@ public:
 
     /// Get the current working configuration
     /// pinfo       The configuration structure, to be returned.
-    pxcStatus __inline QueryProfile(ProfileInfo *pinfo) { return QueryProfile(WORKING_PROFILE,pinfo); }
+    pxcStatus __inline QueryProfile(ProfileInfo *pinfo) { return QueryProfile((pxcU32)WORKING_PROFILE,pinfo); }
 
     /// Set the working configuration
     /// pinfo       The configuration structure
@@ -223,19 +225,19 @@ public:
     /// label       The blob identifier
     /// idx         reserved; must be zero
     /// data        The blob data structure, to be returned
-    virtual pxcStatus PXCAPI QueryBlobData(Blob::Label label, pxcU32 idx, Blob *data) { return PXC_STATUS_ITEM_UNAVAILABLE; }
+    virtual pxcStatus PXCAPI QueryBlobData(Blob::Label /*label*/, pxcU32 /*idx*/, Blob * /*data*/) { return PXC_STATUS_ITEM_UNAVAILABLE; }
 
     /// Get the blob image
     /// label       The blob identifier
     /// idx         reserved; must be zero
     /// image       The blob image, to be returned
-    virtual pxcStatus PXCAPI QueryBlobImage(Blob::Label label, pxcU32 idx, PXCImage **image) { return PXC_STATUS_ITEM_UNAVAILABLE; }
+    virtual pxcStatus PXCAPI QueryBlobImage(Blob::Label /*label*/, pxcU32 /*idx*/, PXCImage ** /*image*/) { return PXC_STATUS_ITEM_UNAVAILABLE; }
 
     /// Get the details of the specified geometric node.
     /// user        reserved; must be zero
     /// body        The geometric node identifier
     /// data        The geometric node data structure, to be returned
-    virtual pxcStatus PXCAPI QueryNodeData(pxcUID user, GeoNode::Label body, GeoNode *data) { return PXC_STATUS_ITEM_UNAVAILABLE; }
+    virtual pxcStatus PXCAPI QueryNodeData(pxcUID /*user*/, GeoNode::Label /*body*/, GeoNode * /*data*/) { return PXC_STATUS_ITEM_UNAVAILABLE; }
 
     /// Get the details of an array of geometric nodes.
     /// user        reserved; must be zero
@@ -254,7 +256,7 @@ public:
     /// body        The geometric node identifier that the pose/gesture(s) associate with
     /// idx         Zero-basd index to enumerate all available poses/gestures
     /// data        The pose/gesture data structure, to be returned
-    virtual pxcStatus PXCAPI QueryGestureData(pxcUID user, GeoNode::Label body, pxcU32 idx, Gesture *data) { return PXC_STATUS_ITEM_UNAVAILABLE; }
+    virtual pxcStatus PXCAPI QueryGestureData(pxcUID /*user*/, GeoNode::Label /*body*/, pxcU32 /*idx*/, Gesture * /*data*/) { return PXC_STATUS_ITEM_UNAVAILABLE; }
 
     /// Process the input image(s) for finger tracking and pose/gesture recognition.
     /// images      The input image arrays
@@ -263,10 +265,11 @@ public:
 
     /// Subscribe to the alert events.
     /// handler     The alert handler instance
-    virtual pxcStatus PXCAPI SubscribeAlert(Alert::Handler *handler) { return PXC_STATUS_NO_ERROR; }
+    virtual pxcStatus PXCAPI SubscribeAlert(Alert::Handler * /*handler*/) { return PXC_STATUS_NO_ERROR; }
 
     /// Subscribe to the pose/gesture events.
     /// threshold   reserved; must be 100.
     /// handler     The gesture handler instance
-    virtual pxcStatus PXCAPI SubscribeGesture(pxcU32 threshold, Gesture::Handler *handler) { return PXC_STATUS_NO_ERROR; }
+    virtual pxcStatus PXCAPI SubscribeGesture(pxcU32 /*threshold*/, Gesture::Handler * /*handler*/) { return PXC_STATUS_NO_ERROR; }
 };
+#pragma warning(pop)

@@ -42,7 +42,6 @@ public:
     void SetDetectionData(PXCFaceAnalysis::Detection::Data *data);
     void SetLandmarkData(PXCFaceAnalysis::Landmark *landmark, pxcU32 fid);
     void SetRecognitionData(PXCFaceAnalysis *faceAnalyzer, pxcCHAR *perName, pxcU32 size, pxcU32 fid);
-    void SetAttributeData(PXCFaceAnalysis::Attribute *attribute, pxcU32 fid);
 
     void PrintLandmarkData(PXCFaceAnalysis::Landmark *landmark, pxcU32 fid);
     
