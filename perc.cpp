@@ -23,8 +23,6 @@ void perc::StaticInitialize()
 {
     // Place one-time initialization stuff here; As of FireBreath 1.4 this should only
     // be called once per process
-
-	MessageBox(NULL, L"StaticInitialize", L"", 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
