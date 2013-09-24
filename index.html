@@ -1,0 +1,35 @@
+<!doctype html>
+<head>
+<title>Motion Maps</title>
+<style type="text/css">
+    html { height: 100% }
+    body { height: 100%; margin: 0; padding: 0 }
+    #map { height: 100% }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.css' rel='stylesheet' />
+<!--[if lte IE 8]>
+<link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.ie.css' rel='stylesheet' />
+<![endif]-->
+<script src='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js'></script>
+<script src="motion maps.js"></script>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44280013-1', 'motionmapsapp.com');
+  ga('send', 'pageview');
+</script>
+</head>
+<body>
+    <object id="plugin" type="application/x-motionmaps" style="height: 0px"></object>
+    <div id="no_plugin_alert" class="alert alert-warning" style="display: none; position: absolute; top: 0px; width: 100%">You need to install the motion maps web browser plugin to use motion maps with your gesture camera. Click <a href="Motion Maps.msi">here</a> to download it.</div>
+    <div id="plugin_failed_alert" class="alert alert-warning" style="display: none; position: absolute; top: 0px; width: 100%">There was a problem connecting to the gesture camera.</div>
+    <div id="map" class="ts-map geocoder" style="position:absolute; top: 0px; width:100%; height:100%"></div>
+</body>
+</html>
