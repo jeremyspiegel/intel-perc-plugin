@@ -1,22 +1,15 @@
-#/**********************************************************\ 
-#
-# Auto-Generated Plugin Configuration file
-# for perc
-#
-#\**********************************************************/
-
-set(PLUGIN_NAME "perc")
-set(PLUGIN_PREFIX "PERC")
-set(COMPANY_NAME "perc")
+set(PLUGIN_NAME "Motion Maps")
+set(PLUGIN_PREFIX "motionmaps")
+set(COMPANY_NAME "Motion Maps")
 
 # ActiveX constants:
-set(FBTYPELIB_NAME percLib)
-set(FBTYPELIB_DESC "perc 1.0 Type Library")
-set(IFBControl_DESC "perc Control Interface")
-set(FBControl_DESC "perc Control Class")
-set(IFBComJavascriptObject_DESC "perc IComJavascriptObject Interface")
-set(FBComJavascriptObject_DESC "perc ComJavascriptObject Class")
-set(IFBComEventSource_DESC "perc IFBComEventSource Interface")
+set(FBTYPELIB_NAME motionmapsLib)
+set(FBTYPELIB_DESC "motionmaps 1.0 Type Library")
+set(IFBControl_DESC "motionmaps Control Interface")
+set(FBControl_DESC "motionmaps Control Class")
+set(IFBComJavascriptObject_DESC "motionmaps IComJavascriptObject Interface")
+set(FBComJavascriptObject_DESC "motionmaps ComJavascriptObject Class")
+set(IFBComEventSource_DESC "motionmaps IFBComEventSource Interface")
 set(AXVERSION_NUM "1")
 
 # NOTE: THESE GUIDS *MUST* BE UNIQUE TO YOUR PLUGIN/ACTIVEX CONTROL!  YES, ALL OF THEM!
@@ -33,23 +26,23 @@ else ( FB_PLATFORM_ARCH_32 )
 endif ( FB_PLATFORM_ARCH_32 )
 
 # these are the pieces that are relevant to using it from Javascript
-set(ACTIVEX_PROGID "perc.perc")
-set(MOZILLA_PLUGINID "perc.com/perc")
+set(ACTIVEX_PROGID "motionmaps.motionmaps")
+set(MOZILLA_PLUGINID "motionmaps.com/motionmapsrc")
 
 # strings
-set(FBSTRING_CompanyName "perc")
-set(FBSTRING_PluginDescription "Intel Perceptual Computing Plugin")
+set(FBSTRING_CompanyName "Motion Maps")
+set(FBSTRING_PluginDescription "Motion Maps")
 set(FBSTRING_PLUGIN_VERSION "1.0.0.0")
-set(FBSTRING_LegalCopyright "Copyright 2013 perc")
-set(FBSTRING_PluginFileName "np${PLUGIN_NAME}.dll")
-set(FBSTRING_ProductName "perc")
+set(FBSTRING_LegalCopyright "Copyright 2013 Motion Maps")
+set(FBSTRING_PluginFileName "npmotionmaps.dll")
+set(FBSTRING_ProductName "Motion Maps")
 set(FBSTRING_FileExtents "")
 if ( FB_PLATFORM_ARCH_32 )
-    set(FBSTRING_PluginName "perc")  # No 32bit postfix to maintain backward compatability.
+    set(FBSTRING_PluginName "Motion Maps")  # No 32bit postfix to maintain backward compatability.
 else ( FB_PLATFORM_ARCH_32 )
-    set(FBSTRING_PluginName "perc_${FB_PLATFORM_ARCH_NAME}")
+    set(FBSTRING_PluginName "Motion Maps_${FB_PLATFORM_ARCH_NAME}")
 endif ( FB_PLATFORM_ARCH_32 )
-set(FBSTRING_MIMEType "application/x-perc")
+set(FBSTRING_MIMEType "application/x-motionmaps")
 
 # Uncomment this next line if you're not planning on your plugin doing
 # any drawing:
