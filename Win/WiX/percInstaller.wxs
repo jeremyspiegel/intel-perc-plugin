@@ -15,7 +15,10 @@
             <RemoveExistingProducts After="InstallInitialize" />
             <InstallExecute After="RemoveExistingProducts" />
         </InstallExecuteSequence>
-        <Media Id="1" Cabinet="${PLUGIN_NAME}.cab" EmbedCab="yes" />
+        <Media Id="1" Cabinet="percplugin.cab" EmbedCab="yes" />
+
+        <Icon Id="motionmaps.ico" SourceFile="${CMAKE_CURRENT_SOURCE_DIR}/motion maps.ico"/>
+        <Property Id="ARPPRODUCTICON" Value="motionmaps.ico" />
 
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="${FB_WIX_INSTALL_LOCATION}">
@@ -60,16 +63,38 @@
                             </Component>
                             /example -->
                             <!--  -->
+                            <Component Id="ShortcutComp" Guid="B540A350-6F96-499A-BE9E-218FAB664149">
+                                <File Id="ShotcutFile" Source="${CMAKE_CURRENT_SOURCE_DIR}/Motion Maps.url" />
+                                <RegistryValue
+                                    Root="HKCU"
+                                    Key="SOFTWARE\${COMPANY_NAME}\${PLUGIN_NAME}\${FBSTRING_PLUGIN_VERSION}\shortcut"
+                                    Name="Uninstall"
+                                    Type="string"
+                                    Value="${FBSTRING_PLUGIN_VERSION}"
+                                    KeyPath="yes" />
+                            </Component>
                         </Directory>
                     </Directory>
                 </Directory>
             </Directory>
+
+            <Directory Id="ProgramMenuFolder">
+               <Component Id="ApplicationShortcuts" Guid="6167F7A1-8AC6-419D-83E1-42BF14E15E8B">
+                  <Shortcut Id="ApplicationShortcut1" Name="Motion Maps" Description="Motion Maps" Target="[INSTALLDIR]Motion Maps.url" WorkingDirectory="INSTALLDIR" Icon="motionmaps.ico"/>
+                  <RegistryValue Root="HKCU" Key="SOFTWARE\${COMPANY_NAME}\${PLUGIN_NAME}\${FBSTRING_PLUGIN_VERSION}"
+                            Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+                  <RemoveFolder Id="ProgramMenuSubfolder" On="uninstall"/>
+               </Component>
+             </Directory>
         </Directory>
+
 
         <Feature Id="MainPluginFeature" Title="${FBSTRING_ProductName}" Level="1">
             <ComponentRef Id="InstallDirComp"/>
             <ComponentRef Id="PluginNameDirComp"/>
             <ComponentRef Id="CompanyDirComp"/>
+            <ComponentRef Id="ShortcutComp"/>
+            <ComponentRef Id="ApplicationShortcuts"/>
             <ComponentGroupRef Id="PluginDLLGroup"/>
         </Feature>
     </Product>
