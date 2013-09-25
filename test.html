@@ -1,0 +1,67 @@
+<!doctype html>
+<html ng-app>
+<head>
+<title>Test</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+<script src="test.js"></script>
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    <object id="plugin" type="application/x-motionmaps" style="height: 0px"></object>
+    <div ng-controller="TestController">
+      <div ng-show="error">{{error}}</div>
+      <div>Frames per second: {{fps}}</div>
+      <table>
+        <tr>
+          <td>body</td>
+          <td>positionWorld</td>
+          <td>positionImage</td>
+          <td>side</td>
+          <td>confidence</td>
+          <td>radiusWorld</td>
+          <td>radiusImage</td>
+          <td>massCenterWorld</td>
+          <td>massCenterImage</td>
+          <td>normal</td>
+          <td>openness</td>
+          <td>opennessState</td>
+        </tr>
+        <tr ng-repeat="node in frame.gesture.nodes">
+          <td>{{node.body}}</td>
+          <td>
+            ({{node.positionWorld.x.toFixed(2)}},
+             {{node.positionWorld.y.toFixed(2)}},
+             {{node.positionWorld.z.toFixed(2)}})
+          </td>
+          <td>({{node.positionImage.x}}, {{node.positionImage.y}})</td>
+          <td>{{node.sideRight ? "right" : node.sideLeft ? "left" : ""}}</td>
+          <td>{{node.confidence}}</td>
+          <td>{{node.radiusWorld}}</td>
+          <td>{{node.radiusImage}}</td>
+          <td>
+            <span ng-show="node.massCenterWorld">
+              ({{node.massCenterWorld.x.toFixed(1)}},
+               {{node.massCenterWorld.y.toFixed(1)}},
+               {{node.massCenterWorld.z.toFixed(1)}})
+            </span>
+          </td>
+          <td>
+            <span ng-show="node.massCenterImage">
+              ({{node.massCenterImage.x.toFixed(1)}}, {{node.massCenterImage.y.toFixed(1)}})
+            <span>
+          </td>
+          <td>
+            <span ng-show="node.normal">
+              ({{node.normal.x.toFixed(2)}},
+               {{node.normal.y.toFixed(2)}},
+               {{node.normal.z.toFixed(2)}})
+            </span>
+          </td>
+          <td>{{node.openness}}</td>
+          <td>{{node.palmOpen ? "open" : node.palmClosed ? "closed" : ""}}</td>
+        </tr>
+      </table>
+    </div>
+</body>
+</html>

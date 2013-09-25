@@ -10,15 +10,29 @@ $(document).ready(function() {
         $("#map").css('height', mapHeight);
     });
 
-    var frame;
+    var normal;
+    var hasMiddleFinger;
+    var massCenterWorldY;
     var frames = 0;
-    function onFrame(f) {
-        frame = f;
+    function onFrame(frame) {
+        normal = null;
+        hasMiddleFinger = false;
+        massCenterWorldY = null;
+        frame.gesture.nodes.forEach(function(node) {
+            if ( "normal" in node )
+                normal = node.normal;
+
+            if ( "massCenterWorld" in node )
+                massCenterWorldY = node.massCenterWorld.y;
+
+            if ( node.body["fingerMiddle"] )
+                hasMiddleFinger = true;
+        });
+
         ++frames;
     }
 
     setInterval(function() {
-        console.log(frames);
         frames = 0;
     }, 1000);
 
@@ -67,16 +81,16 @@ $(document).ready(function() {
 
     var intervalsSinceZoom = Number.MAX_VALUE;
     setInterval(function() {
-        if ( typeof frame === 'undefined' || typeof frame.x === 'undefined' )
-            return;
-
-        if ( intervalsSinceZoom < 10 )
+        if ( intervalsSinceZoom < 5 )
         {
             ++intervalsSinceZoom;
             return;
         }
 
-        var x = frame.x;
+        if ( !normal || !massCenterWorldY || !hasMiddleFinger || frames == 0 )
+            return;
+
+        var x = normal.x;
         x *= ( x > 0 ? 15 : 25 );
         x = Math.pow(x, 2) * (x > 0 ? 1 : -1);
         if ( Math.abs(x) < 1.5 )
@@ -85,7 +99,7 @@ $(document).ready(function() {
         x = x > 0 ? Math.min(x, 50) : Math.max(x, -50);
         x = Math.round(x);
 
-        var y = frame.z;
+        var y = normal.z;
         if ( -0.60 < y && y <= -0.50 ) {
             y = 0;
         } else if ( y > -0.50 ) {
@@ -104,11 +118,13 @@ $(document).ready(function() {
 
         map.panBy([x, y], { animate: false });
 
-        if ( frame.massCenterWorld.y < 170 ) {
+        if ( massCenterWorldY < 160 ) {
             intervalsSinceZoom = 0;
+            massCenterWorldY = null;
             map.zoomIn();
-        } else if ( frame.massCenterWorld.y > 280 ) {
+        } else if ( massCenterWorldY > 280 ) {
             intervalsSinceZoom = 0;
+            massCenterWorldY = null;
             map.zoomOut();
         }
     }, 100);

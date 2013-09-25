@@ -7,6 +7,18 @@
 #include "gesture_render.h"
 #include <windows.h>
 
+
+class percFrame : public FB::JSAPIAuto
+{
+public:
+    percFrame()
+    {
+        registerProperty( "num", FB::make_property( this, &percFrame::get_num ) );
+    }
+
+    long get_num() { return 5; }
+};
+
 class MyPipeline: public UtilPipeline
 {
 public:
@@ -26,150 +38,122 @@ bool MyPipeline::OnNewFrame()
     if ( m_percAPI.Stop() )
         return false;
 
-    // PXCGesture* detector = QueryGesture();
-    // PXCGesture::GeoNode node;
-    // detector->QueryNodeData( 0, PXCGesture::GeoNode::LABEL_BODY_HAND_PRIMARY, &node );
-    // FB::VariantMap frame;
-    // fbPositionWorld["x"] = node.positionWorld.x;
-    // fbPositionWorld["y"] = node.positionWorld.y;
-    // fbPositionWorld["z"] = node.positionWorld.z;
-
-    // m_percAPI.fire_frame( frame );
-
     PXCGesture* detector = QueryGesture();
-    FB::VariantMap result;
 
-    PXCGesture::GeoNode middleFinger;
-    if ( detector->QueryNodeData( 0, PXCGesture::GeoNode::LABEL_BODY_HAND_PRIMARY|PXCGesture::GeoNode::LABEL_FINGER_MIDDLE, &middleFinger ) != PXC_STATUS_ITEM_UNAVAILABLE )
+    PXCGesture::GeoNode nodes[2][11] = { 0 };
+	detector->QueryNodeData( 0, PXCGesture::GeoNode::LABEL_BODY_HAND_PRIMARY, 10, nodes[0] );
+	detector->QueryNodeData( 0, PXCGesture::GeoNode::LABEL_BODY_HAND_SECONDARY, 10, nodes[1] );
+	detector->QueryNodeData( 0, PXCGesture::GeoNode::LABEL_BODY_ELBOW_PRIMARY, &nodes[0][10] );
+	detector->QueryNodeData( 0, PXCGesture::GeoNode::LABEL_BODY_ELBOW_SECONDARY, &nodes[1][10] );
+
+    FB::VariantList fbNodes;
+    for ( int i = 0; i < 2; i++ )
     {
-        PXCGesture::GeoNode hand;
-        detector->QueryNodeData( 0, PXCGesture::GeoNode::LABEL_BODY_HAND_PRIMARY, &hand );
+        for ( int j = 0; j < 11; j++ )
+        {
+            const PXCGesture::GeoNode& node = nodes[i][j];
+            if ( node.body <= 0 )
+                continue;
 
-        result["x"] = hand.normal.x;
-        result["y"] = hand.normal.y;
-        result["z"] = hand.normal.z;
+            FB::VariantMap body;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_BODY ) == PXCGesture::GeoNode::LABEL_BODY_ELBOW_PRIMARY )
+                body["elbowPrimary"] = true;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_BODY ) == PXCGesture::GeoNode::LABEL_BODY_ELBOW_SECONDARY )
+                body["elbowSecondary"] = true;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_BODY ) == PXCGesture::GeoNode::LABEL_BODY_HAND_PRIMARY )
+                body["handPrimary"] = true;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_BODY ) == PXCGesture::GeoNode::LABEL_BODY_HAND_SECONDARY )
+                body["handSecondary"] = true;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_FINGER_THUMB )
+                body["fingerThumb"] = true;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_FINGER_INDEX )
+                body["fingerIndex"] = true;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_FINGER_MIDDLE )
+                body["fingerMiddle"] = true;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_FINGER_RING )
+                body["fingerRing"] = true;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_FINGER_PINKY )
+                body["fingerPinky"] = true;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_HAND_FINGERTIP )
+                body["handFingertip"] = true;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_HAND_UPPER )
+                body["handUpper"] = true;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_HAND_MIDDLE )
+                body["handMiddle"] = true;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_HAND_LOWER )
+                body["handLower"] = true;
 
-        FB::VariantMap fbMassCenterWorld;
-        fbMassCenterWorld["x"] = hand.massCenterWorld.x;
-        fbMassCenterWorld["y"] = hand.massCenterWorld.y;
-        fbMassCenterWorld["z"] = hand.massCenterWorld.z;
-        result["massCenterWorld"] = fbMassCenterWorld;
-    }
-    m_percAPI.OnFrame( result );
-    return true;
+            FB::VariantMap fbNode;
+            fbNode["body"] = body;
 
- //    PXCGesture::GeoNode nodes[2][11] = { 0 };
-	// detector->QueryNodeData( 0, PXCGesture::GeoNode::LABEL_BODY_HAND_PRIMARY, 10, nodes[0] );
-	// detector->QueryNodeData( 0, PXCGesture::GeoNode::LABEL_BODY_HAND_SECONDARY, 10, nodes[1] );
-	// detector->QueryNodeData( 0, PXCGesture::GeoNode::LABEL_BODY_ELBOW_PRIMARY, &nodes[0][10] );
-	// detector->QueryNodeData( 0, PXCGesture::GeoNode::LABEL_BODY_ELBOW_SECONDARY, &nodes[1][10] );
+            FB::VariantMap fbPositionWorld;
+            fbPositionWorld["x"] = node.positionWorld.x;
+            fbPositionWorld["y"] = node.positionWorld.y;
+            fbPositionWorld["z"] = node.positionWorld.z;
+            fbNode["positionWorld"] = fbPositionWorld;
 
- //    FB::VariantList fbNodes;
- //    for ( int i = 0; i < 2; i++ )
- //    {
- //        for ( int j = 0; j < 11; j++ )
- //        {
- //            const PXCGesture::GeoNode& node = nodes[i][j];
- //            if ( node.body <= 0 )
- //                continue;
+            FB::VariantMap fbPositionImage;
+            fbPositionImage["x"] = node.positionImage.x;
+            fbPositionImage["y"] = node.positionImage.y;
+            fbNode["positionImage"] = fbPositionImage;
 
- //            FB::VariantMap body;
- //            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_BODY ) == PXCGesture::GeoNode::LABEL_BODY_ELBOW_PRIMARY )
- //                body["elbowPrimary"] = true;
- //            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_BODY ) == PXCGesture::GeoNode::LABEL_BODY_ELBOW_SECONDARY )
- //                body["elbowSecondary"] = true;
- //            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_BODY ) == PXCGesture::GeoNode::LABEL_BODY_HAND_PRIMARY )
- //                body["handPrimary"] = true;
- //            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_BODY ) == PXCGesture::GeoNode::LABEL_BODY_HAND_SECONDARY )
- //                body["handSecondary"] = true;
- //            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_FINGER_THUMB )
- //                body["fingerThumb"] = true;
- //            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_FINGER_INDEX )
- //                body["fingerIndex"] = true;
- //            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_FINGER_MIDDLE )
- //                body["fingerMiddle"] = true;
- //            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_FINGER_RING )
- //                body["fingerRing"] = true;
- //            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_FINGER_PINKY )
- //                body["fingerPinky"] = true;
- //            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_HAND_FINGERTIP )
- //                body["handFingertip"] = true;
- //            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_HAND_UPPER )
- //                body["handUpper"] = true;
- //            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_HAND_MIDDLE )
- //                body["handMiddle"] = true;
- //            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_HAND_LOWER )
- //                body["handLower"] = true;
+            if ( node.side == PXCGesture::GeoNode::LABEL_LEFT )
+                fbNode["sideLeft"] = true;
+            if ( node.side == PXCGesture::GeoNode::LABEL_RIGHT )
+                fbNode["sideRight"] = true;
 
- //            FB::VariantMap fbNode;
- //            fbNode["body"] = body;
+            fbNode["confidence"] = node.confidence;
 
- //            FB::VariantMap fbPositionWorld;
- //            fbPositionWorld["x"] = node.positionWorld.x;
- //            fbPositionWorld["y"] = node.positionWorld.y;
- //            fbPositionWorld["z"] = node.positionWorld.z;
- //            fbNode["positionWorld"] = fbPositionWorld;
+            if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_HAND_FINGERTIP )
+            {
+                fbNode["radiusWorld"] = node.radiusWorld;
+                fbNode["radiusImage"] = node.radiusImage;
+            }
 
- //            FB::VariantMap fbPositionImage;
- //            fbPositionImage["x"] = node.positionImage.x;
- //            fbPositionImage["y"] = node.positionImage.y;
- //            fbNode["positionImage"] = fbPositionImage;
+            if ( node.body == PXCGesture::GeoNode::LABEL_BODY_HAND_PRIMARY
+              || node.body == PXCGesture::GeoNode::LABEL_BODY_HAND_SECONDARY )
+            {
+                FB::VariantMap fbMassCenterWorld;
+                fbMassCenterWorld["x"] = node.massCenterWorld.x;
+                fbMassCenterWorld["y"] = node.massCenterWorld.y;
+                fbMassCenterWorld["z"] = node.massCenterWorld.z;
+                fbNode["massCenterWorld"] = fbMassCenterWorld;
 
- //            // if ( node.side == PXCGesture::GeoNode::LABEL_LEFT )
- //            //     fbNode["sideLeft"] = true;
- //            // if ( node.side == PXCGesture::GeoNode::LABEL_RIGHT )
- //            //     fbNode["sideRight"] = true;
+                FB::VariantMap fbMassCenterImage;
+                fbMassCenterImage["x"] = node.massCenterImage.x;
+                fbMassCenterImage["y"] = node.massCenterImage.y;
+                fbNode["massCenterImage"] = fbMassCenterImage;
 
- //            // fbNode["confidence"] = node.confidence;
+                FB::VariantMap fbNormal;
+                fbNormal["x"] = node.normal.x;
+                fbNormal["y"] = node.normal.y;
+                fbNormal["z"] = node.normal.z;
+                fbNode["normal"] = fbNormal;
 
- //            // if ( ( node.body & PXCGesture::GeoNode::LABEL_MASK_DETAILS ) == PXCGesture::GeoNode::LABEL_HAND_FINGERTIP )
- //            // {
- //            //     fbNode["radiusWorld"] = node.radiusWorld;
- //            //     fbNode["radiusImage"] = node.radiusImage;
- //            // }
+                fbNode["openness"] = node.openness;
 
- //            if ( node.body == PXCGesture::GeoNode::LABEL_BODY_HAND_PRIMARY
- //              || node.body == PXCGesture::GeoNode::LABEL_BODY_HAND_SECONDARY )
- //            {
- //                FB::VariantMap fbMassCenterWorld;
- //                fbMassCenterWorld["x"] = node.massCenterWorld.x;
- //                fbMassCenterWorld["y"] = node.massCenterWorld.y;
- //                fbMassCenterWorld["z"] = node.massCenterWorld.z;
- //                fbNode["massCenterWorld"] = fbMassCenterWorld;
+                if ( node.opennessState == PXCGesture::GeoNode::LABEL_OPEN )
+                    fbNode["palmOpen"] = true;
+                if ( node.opennessState == PXCGesture::GeoNode::LABEL_CLOSE )
+                    fbNode["palmClosed"] = true;
+            }
 
- //                FB::VariantMap fbMassCenterImage;
- //                fbMassCenterImage["x"] = node.massCenterImage.x;
- //                fbMassCenterImage["y"] = node.massCenterImage.y;
- //                fbNode["massCenterImage"] = fbMassCenterImage;
+            fbNodes.push_back( fbNode );
+       }
+   }
 
- //                FB::VariantMap fbNormal;
- //                fbNormal["x"] = node.normal.x;
- //                fbNormal["y"] = node.normal.y;
- //                fbNormal["z"] = node.normal.z;
- //                fbNode["normal"] = fbNormal;
+   // PXCGesture::Gesture gesture;
+   // if ( detector->QueryGestureData( 0, ) != PXC_STATUS_ITEM_UNAVAILABLE )
+   // {
 
- //                fbNode["openness"] = node.openness;
+   // }
 
- //                if ( node.opennessState == PXCGesture::GeoNode::LABEL_CLOSE )
- //                    fbNode["palmOpen"] = true;
- //                if ( node.opennessState == PXCGesture::GeoNode::LABEL_OPEN )
- //                    fbNode["palmClosed"] = true;
- //            }
+    FB::VariantMap fbGesture;
+    fbGesture["nodes"] = fbNodes;
 
-
- //            // if ( node.openness == PXCGesture::GeoNode::LABEL_LEFT )
- //            //     fbNode["sideLeft"] = true;
-
- //            fbNodes.push_back( fbNode );
- //       }
- //   }
-
- //    FB::VariantMap gesture;
- //    gesture["nodes"] = fbNodes;
-
- //    FB::VariantMap frame;
- //    frame["gesture"] = gesture;
- //    m_percAPI.fire_frame( frame );
+    FB::VariantMap frame;
+    frame["gesture"] = fbGesture;
+    m_percAPI.OnFrame( frame );
 
     return true;
 }
