@@ -14,10 +14,9 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     [^.]*.cpp
     [^.]*.h
     [^.]*.cmake
-    PCSDK/gesture_render.cpp
     )
 
-include_directories(${PLUGIN_INCLUDE_DIRS} PCSDK/include)
+include_directories(${PLUGIN_INCLUDE_DIRS} "C:\Program Files (x86)\Intel\PCSDK\include" "C:\Program Files (x86)\Intel\PCSDK\sample\common\include")
 
 # Generated files are stored in ${GENERATED} by the project configuration
 SET_SOURCE_FILES_PROPERTIES(

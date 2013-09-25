@@ -48,10 +48,10 @@ add_windows_plugin(${PROJECT_NAME} SOURCES)
 # add library dependencies here; leave ${PLUGIN_INTERNAL_DEPS} there unless you know what you're doing!
 target_link_libraries(${PROJECT_NAME}
     ${PLUGIN_INTERNAL_DEPS}
-    optimized ${CMAKE_CURRENT_SOURCE_DIR}/PCSDK/lib/libpxc
-    debug ${CMAKE_CURRENT_SOURCE_DIR}/PCSDK/lib/libpxc_d
-    optimized ${CMAKE_CURRENT_SOURCE_DIR}/PCSDK/lib/libpxcutils
-    debug ${CMAKE_CURRENT_SOURCE_DIR}/PCSDK/lib/libpxcutils_d
+    optimized "C:\Program Files (x86)\Intel\PCSDK\lib\Win32\libpxc"
+    debug "C:\Program Files (x86)\Intel\PCSDK\lib\Win32\libpxc_d"
+    optimized "C:\Program Files (x86)\Intel\PCSDK\sample\common\lib\Win32\v110\libpxcutils"
+    debug "C:\Program Files (x86)\Intel\PCSDK\sample\common\lib\Win32\v110\libpxcutils_d"
     msimg32
     )
 
