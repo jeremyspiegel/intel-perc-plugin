@@ -4,20 +4,7 @@
 #include "global/config.h"
 #include "percAPI.h"
 #include "util_pipeline.h"
-#include "gesture_render.h"
 #include <windows.h>
-
-
-class percFrame : public FB::JSAPIAuto
-{
-public:
-    percFrame()
-    {
-        registerProperty( "num", FB::make_property( this, &percFrame::get_num ) );
-    }
-
-    long get_num() { return 5; }
-};
 
 class MyPipeline: public UtilPipeline
 {
@@ -141,12 +128,6 @@ bool MyPipeline::OnNewFrame()
             fbNodes.push_back( fbNode );
        }
    }
-
-   // PXCGesture::Gesture gesture;
-   // if ( detector->QueryGestureData( 0, ) != PXC_STATUS_ITEM_UNAVAILABLE )
-   // {
-
-   // }
 
     FB::VariantMap fbGesture;
     fbGesture["nodes"] = fbNodes;

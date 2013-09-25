@@ -1,3 +1,6 @@
+#ifndef percAPI_h
+#define percAPI_h
+
 #include <string>
 #include <sstream>
 #include <boost/weak_ptr.hpp>
@@ -5,9 +8,6 @@
 #include "BrowserHost.h"
 #include "perc.h"
 #include <boost/thread/thread.hpp>
-
-#ifndef H_percAPI
-#define H_percAPI
 
 class percAPI : public FB::JSAPIAuto
 {
@@ -17,8 +17,6 @@ public:
 
     percPtr getPlugin();
     std::string get_version();
-
-    //FB_JSAPI_EVENT( frame, 1, ( FB::VariantMap ) );
 
     void loopFrames( const FB::JSObjectPtr& onFrame, const FB::JSObjectPtr& onError );
 
